@@ -34,7 +34,7 @@ func TestPart1(t *testing.T) {
 
 	input := bufio.NewScanner(f)
 
-	assert.Equal(t, 54304, Part1(input))
+	assert.Equal(t, 2512, Part1(input))
 }
 
 func TestPart2(t *testing.T) {
@@ -46,5 +46,5 @@ func TestPart2(t *testing.T) {
 
 	input := bufio.NewScanner(f)
 
-	assert.Equal(t, 54418, Part2(input))
+	assert.Equal(t, 67335, Part2(input))
 }
