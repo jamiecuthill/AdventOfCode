@@ -171,6 +171,10 @@ func Part2(input *bufio.Scanner) int {
 // 79-92
 // 50-97
 // 52-99
+// split the input range into ranges of the source mappings
+// for each source range convert to a destination range
+// return the destination ranges
+// pass into the next traverse
 func traverseRng(via []def, src, len int) (int, int) {
 	var dest = src
 	// var destLen = len
