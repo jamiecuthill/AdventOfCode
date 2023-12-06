@@ -107,6 +107,11 @@ func traverse(via []def, src int) int {
 	return dest
 }
 
+type rng struct {
+	start int
+	end   int
+}
+
 func Part2(input *bufio.Scanner) int {
 	var seeds []string
 	var mapType string
@@ -140,50 +145,71 @@ func Part2(input *bufio.Scanner) int {
 		}
 	}
 
-	var locationMin = math.MaxInt
-
 	seedInts := make([]int, len(seeds))
 	for i, s := range seeds {
 		seedInts[i], _ = strconv.Atoi(s)
 	}
 
+	var ranges = []rng{}
+
 	for i := 0; i < len(seedInts); i += 2 {
-		seed := seedInts[i]
-		len := seedInts[i+1]
-		for s := seed; s < seed+len; s++ {
-			soil := traverse(almanac["seed-to-soil"], s)
-			fertilizer := traverse(almanac["soil-to-fertilizer"], soil)
-			water := traverse(almanac["fertilizer-to-water"], fertilizer)
-			light := traverse(almanac["water-to-light"], water)
-			temperature := traverse(almanac["light-to-temperature"], light)
-			humidity := traverse(almanac["temperature-to-humidity"], temperature)
-			location := traverse(almanac["humidity-to-location"], humidity)
-			// fmt.Printf("Seed %d, soil %d, fertilizer %d, water %d, light %d, temperature %d, humidity %d, location %d.\n", seed, soil, fertilizer, water, light, temperature, humidity, location)
-			if location < locationMin {
-				locationMin = location
-			}
+		ranges = append(ranges, rng{start: seedInts[i], end: seedInts[i] + seedInts[i+1] - 1})
+	}
+
+	ranges = traverseRange(almanac["seed-to-soil"], ranges)
+	ranges = traverseRange(almanac["soil-to-fertilizer"], ranges)
+	ranges = traverseRange(almanac["fertilizer-to-water"], ranges)
+	ranges = traverseRange(almanac["water-to-light"], ranges)
+	ranges = traverseRange(almanac["light-to-temperature"], ranges)
+	ranges = traverseRange(almanac["temperature-to-humidity"], ranges)
+	ranges = traverseRange(almanac["humidity-to-location"], ranges)
+
+	var locationMin = math.MaxInt
+
+	for _, r := range ranges {
+		if r.start < locationMin {
+			locationMin = r.start
 		}
 	}
 
 	return locationMin
 }
 
-// 79-92
-// 50-97
-// 52-99
-// split the input range into ranges of the source mappings
-// for each source range convert to a destination range
-// return the destination ranges
-// pass into the next traverse
-func traverseRng(via []def, src, len int) (int, int) {
-	var dest = src
-	// var destLen = len
-	for _, d := range via {
-		if src >= d.src && src < d.src+d.len {
-			i := src - d.src
-			dest = d.dest + i
-			break
+func traverseRange(via []def, ranges []rng) []rng {
+	var new = []rng{}
+
+	// detect breaks in ranges
+	for i := range ranges {
+		for _, d := range via {
+			r := ranges[i]
+			if r.start >= d.src && r.start < d.src+d.len {
+				if d.src+d.len-1 < r.end {
+					ranges[i].end = d.src + d.len - 1
+					ranges = append(ranges,
+						rng{start: d.src + d.len, end: r.end},
+					)
+				}
+			}
 		}
 	}
-	return dest, 0
+
+	// map ranges to new values
+	for _, r := range ranges {
+		var found bool
+		for _, d := range via {
+			if r.start >= d.src && r.start < d.src+d.len {
+				new = append(new, rng{
+					start: r.start + (d.dest - d.src),
+					end:   r.end + (d.dest - d.src),
+				})
+				found = true
+				break
+			}
+		}
+		if !found {
+			new = append(new, rng{start: r.start, end: r.end})
+		}
+	}
+
+	return new
 }
