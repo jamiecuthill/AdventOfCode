@@ -87,7 +87,8 @@ func toIntValues(input []string) []int {
 
 func waysToBeat(t, record int) int {
 	b := math.Pow(float64(t), 2.0)
-	from := (-float64(t) + math.Sqrt(b-(-4.0*-float64(record)))) / (-2.0)
-	to := (-float64(t) - math.Sqrt(b-(-4.0*-float64(record)))) / (-2.0)
+	c := math.Sqrt(b - (-4.0 * -float64(record)))
+	from := (-float64(t) + c) / (-2.0)
+	to := (-float64(t) - c) / (-2.0)
 	return int(math.Ceil(to)) - int(math.Floor(from)) - 1
 }
