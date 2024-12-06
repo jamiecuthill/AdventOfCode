@@ -19,14 +19,13 @@ SMSMSASXSS
 SAXAMASAAA
 MAMMMXMMMM
 MXMXAXMASX`
-const example2 = ``
 
 func TestPart1Example(t *testing.T) {
 	assert.Equal(t, 18, Part1(bufio.NewScanner(strings.NewReader(example1))))
 }
 
 func TestPart2Example(t *testing.T) {
-	assert.Equal(t, 0, Part2(bufio.NewScanner(strings.NewReader(example2))))
+	assert.Equal(t, 9, Part2(bufio.NewScanner(strings.NewReader(example1))))
 }
 
 func TestPart1(t *testing.T) {
@@ -52,5 +51,5 @@ func TestPart2(t *testing.T) {
 
 	input := bufio.NewScanner(f)
 
-	assert.Equal(t, 0, Part2(input))
+	assert.Equal(t, 1890, Part2(input))
 }

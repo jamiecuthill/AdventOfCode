@@ -131,9 +131,36 @@ func Part1(input *bufio.Scanner) int {
 func Part2(input *bufio.Scanner) int {
 	var sum int
 
-	var line string
+	var lines []string
 	for input.Scan() {
-		line += input.Text()
+		lines = append(lines, input.Text())
+	}
+
+	// Look for the following
+	var patterns = map[string]struct{}{
+		"MSSM": {},
+		"SMMS": {},
+		"SMSM": {},
+		"MSMS": {},
+	}
+	var corners = make([]byte, 4)
+
+	for x := 1; x < len(lines[0])-1; x++ {
+		for y := 1; y < len(lines)-1; y++ {
+			// Have we found the right center char?
+			if lines[y][x] != 'A' {
+				continue
+			}
+
+			corners[0] = lines[y-1][x-1]
+			corners[1] = lines[y+1][x+1]
+			corners[2] = lines[y-1][x+1]
+			corners[3] = lines[y+1][x-1]
+
+			if _, ok := patterns[string(corners)]; ok {
+				sum++
+			}
+		}
 	}
 
 	return sum
