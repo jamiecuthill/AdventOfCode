@@ -109,7 +109,7 @@ func gcd(x, y int) int {
 }
 
 func Move(minute int, at, end point, blizzards []blizzard, w, h int) int {
-	queue := deque.New[state]()
+	queue := new(deque.Deque[state])
 	queue.PushFront(state{minute, at})
 	lcm := w * h / gcd(w, h)
 	var seen = map[state]struct{}{}

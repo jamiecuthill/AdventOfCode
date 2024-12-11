@@ -69,7 +69,8 @@ func Part1(input *bufio.Scanner) int {
 		dists[valve] = map[string]int{valve: 0, "AA": 0}
 		visited := map[string]struct{}{valve: {}}
 
-		queue := deque.New[dist](len(valves))
+		queue := new(deque.Deque[dist])
+		queue.Grow(len(valves))
 		queue.PushFront(dist{d: 0, v: valve})
 
 		for queue.Len() > 0 {
@@ -199,7 +200,8 @@ func Part2(input *bufio.Scanner) int {
 		dists[valve] = map[string]int{valve: 0, "AA": 0}
 		visited := map[string]struct{}{valve: {}}
 
-		queue := deque.New[dist](len(valves))
+		queue := new(deque.Deque[dist])
+		queue.Grow(len(valves))
 		queue.PushFront(dist{d: 0, v: valve})
 
 		for queue.Len() > 0 {
