@@ -130,16 +130,18 @@ func Part2(input *bufio.Scanner) int {
 
 			// Look ahead for enough free space for the current block
 			var haveCapacity bool
-			for n := 0; n < blockSize; n++ {
+			var n int
+			for n < blockSize {
 				if disk[i+n] != -1 {
 					haveCapacity = false
 					break
 				}
 				haveCapacity = true
+				n++
 			}
 
 			if !haveCapacity {
-				i++
+				i += n
 				continue
 			}
 
